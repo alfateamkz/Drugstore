@@ -745,11 +745,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\369\\source\\repos\\Drugstore\\Drugstore\\Drugstore.csproj",
+      "projectUniqueName": "C:\\Users\\369\\Desktop\\Drugstore\\Drugstore\\Drugstore.csproj",
       "projectName": "Drugstore",
-      "projectPath": "C:\\Users\\369\\source\\repos\\Drugstore\\Drugstore\\Drugstore.csproj",
+      "projectPath": "C:\\Users\\369\\Desktop\\Drugstore\\Drugstore\\Drugstore.csproj",
       "packagesPath": "C:\\Users\\369\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\369\\source\\repos\\Drugstore\\Drugstore\\obj\\",
+      "outputPath": "C:\\Users\\369\\Desktop\\Drugstore\\Drugstore\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\VS2019\\Shared\\NuGetPackages",

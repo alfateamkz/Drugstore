@@ -66,7 +66,7 @@ namespace Drugstore
                     f = new DrugsFilters.DrugsFilterQuantity();
                     break;
                 case "Отчёт Excel":
-                    f = new DrugsExcel();
+                    f = new DrugsExcel(dataGridView1);
                     break;
             }
             f.ShowDialog();

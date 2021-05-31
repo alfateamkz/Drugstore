@@ -10,7 +10,9 @@
         "dependencies": {
           "Microsoft.Extensions.Configuration.UserSecrets": "3.1.0",
           "System.Data.SqlClient": "4.4.0",
-          "Interop.Microsoft.Office.Interop.Excel": "1.9.0.0"
+          "Interop.Microsoft.Office.Interop.Excel": "1.9.0.0",
+          "Interop.InteropExtensionLib": "1.0.0.0",
+          "Interop.ExcelAdaptorLib": "15.0.0.0"
         },
         "runtime": {
           "Drugstore.dll": {}
@@ -210,6 +212,22 @@
             "fileVersion": "1.9.0.0"
           }
         }
+      },
+      "Interop.InteropExtensionLib/1.0.0.0": {
+        "runtime": {
+          "Interop.InteropExtensionLib.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      },
+      "Interop.ExcelAdaptorLib/15.0.0.0": {
+        "runtime": {
+          "Interop.ExcelAdaptorLib.dll": {
+            "assemblyVersion": "15.0.0.0",
+            "fileVersion": "15.0.0.0"
+          }
+        }
       }
     }
   },
@@ -353,6 +371,16 @@
       "hashPath": "system.text.encoding.codepages.4.4.0.nupkg.sha512"
     },
     "Interop.Microsoft.Office.Interop.Excel/1.9.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Interop.InteropExtensionLib/1.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Interop.ExcelAdaptorLib/15.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

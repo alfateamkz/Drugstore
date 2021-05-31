@@ -13,11 +13,12 @@ using System.IO;
 
 namespace Drugstore
 {
+   
     public static class ApplicationLogic
     {
         private static SqlConnection sqlConnection;
         private static SqlCommand sqlCommand = null;
-        private const string connectionString = @"Server=(LocalDB)\MSSQLLocalDB;Integrated Security=true;AttachDbFileName=C:\Users\369\source\repos\Drugstore\Drugstore\Database1.mdf";
+        private static string connectionString = $@"Server=(LocalDB)\MSSQLLocalDB;Integrated Security=true;AttachDbFileName={Environment.CurrentDirectory}\Database1.mdf";
         private static SqlDataAdapter adapter;
         private static DataTable dataset = null;
 
@@ -42,10 +43,25 @@ namespace Drugstore
                 switch (tables)
                 {
                     case Tables.Documents:
-                        query = "select * from Documents";
+                        query = "select Documents.ID as 'ID записи',"+
+                        "Manufacturers.Title as 'Поставщик',"+
+                        "Drugs.Title as 'Лек-во',"+
+                        "Documents.Quantity as 'Кол-во',"+
+                        "Documents.Price as 'Цена',"+
+                        "ProvisionDate as 'Дата поставки' from Documents "+
+                        "inner join Manufacturers on ManufacturerID = Manufacturers.ID "+
+                        "inner join Drugs on DrugID = Drugs.ID";
                         break;
                     case Tables.Drugs:
-                        query = "select * from Drugs";
+                        query = "select Drugs.Title as 'Название',Indications as 'Показания',"+
+                                "Measures.Title as 'Мера измерения',"+
+                                "Price as 'Цена',"+
+                                "Quantity as 'Кол-во',"+
+                                "Manufacturers.Title as 'Производитель',"+
+                                "ExpTerm as 'Срок годности',"+
+                                "Purpose as 'Назначение' from Drugs "+
+                                "inner join Measures on MeasureID = Measures.ID "+
+                                "inner join Manufacturers on Manufacturer = Manufacturers.ID";
                         break;
                     case Tables.Logs:
                         query = "select * from Logs";
@@ -57,7 +73,11 @@ namespace Drugstore
                         query = "select * from Measures";
                         break;
                     case Tables.Warehouse:
-                        query = "select * from Warehouse";
+                        query = "select Warehouse.ID as 'ID записи',"+
+                                "Drugs.Title as 'Лек-во',"+
+                                "Warehouse.Quantity as 'Кол-во'"+
+                                "from Warehouse"+
+                                "inner join Drugs on DrugID = Drugs.ID";
                         break;
                 }
                 adapter = new SqlDataAdapter(query, sqlConnection);
@@ -79,7 +99,6 @@ namespace Drugstore
                 using (sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    sqlCommand = new SqlCommand(query, sqlConnection);
                     switch (tables)
                     {
                         case Tables.Drugs:
@@ -88,6 +107,7 @@ namespace Drugstore
                                 query = "insert into Drugs(Title,Indications,MeasureID,Price,Quantity,Manufacturer,ExpTerm,Purpose)" +
                              "values(@Tilte,@Indications,@MeasureID,@Price,@Quantity,@Manufacturer,@ExpTerm,@Purpose) select SCOPE_IDENTITY()";
                                 var obj = (DrugsEntity)entity;
+                                sqlCommand = new SqlCommand(query, sqlConnection);
                                 sqlCommand.Parameters.Add(new SqlParameter("@Title", obj.Title));
                                 sqlCommand.Parameters.Add(new SqlParameter("@Indications", obj.Indications));
                                 sqlCommand.Parameters.Add(new SqlParameter("@MeasureID", obj.MeasureID));
@@ -120,6 +140,7 @@ namespace Drugstore
                             {
                                 query = "insert into Manufacturers(Title,Address,Phone,CheckingAccount)" +
                                       "values(@Title,@Address,@Phone,@CheckingAccount)";
+                                sqlCommand = new SqlCommand(query, sqlConnection);
                                 var obj1 = (ManufacturersEntity)entity;
                                 sqlCommand.Parameters.Add(new SqlParameter { SqlDbType = SqlDbType.NVarChar, ParameterName = "@Title", Value = obj1.Title });
                                 sqlCommand.Parameters.Add(new SqlParameter { SqlDbType = SqlDbType.NVarChar, ParameterName = "@Phone", Value = obj1.Phone });
@@ -138,6 +159,7 @@ namespace Drugstore
                             try
                             {
                                 query = "insert into Measures(Title) values(@Title)";
+                                sqlCommand = new SqlCommand(query, sqlConnection);
                                 var obj2 = (MeasuresEntity)entity;
                                 sqlCommand.Parameters.Add(new SqlParameter("@Title", obj2.Title));
                                 sqlCommand.ExecuteNonQuery();
@@ -153,6 +175,7 @@ namespace Drugstore
                             try
                             {
                                 query = "insert into Warehouse(DrugID,Quantity) values(@DrugID,@Quantity)";
+                                sqlCommand = new SqlCommand(query, sqlConnection);
                                 var obj3 = (WarehouseItemsEntity)entity;
                                 sqlCommand.Parameters.Add(new SqlParameter("@DrugID", SqlDbType.NVarChar, obj3.DrugID));
                                 sqlCommand.Parameters.Add(new SqlParameter("@Quantity", obj3.Quantity));
@@ -180,13 +203,13 @@ namespace Drugstore
                 using (sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    sqlCommand = new SqlCommand(query, sqlConnection);
                     switch (tables)
                     {
                         case Tables.Drugs:
                             query = "Update Drugs Set(Title=@Title,Indications=@Indications,MeasureID=@MeasureID" +
                                 ",Price=@Price,Quantity=@Quantity,Manufacturer=@Manufacturer,ExpTerm=@ExpTerm,Purpose=@Purpose)" +
                             "where ID=@ID";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             var obj = (DrugsEntity)entity;
                             sqlCommand.Parameters.Add(new SqlParameter("@ID", obj.ID));
                             sqlCommand.Parameters.Add(new SqlParameter("@Title", obj.Title));
@@ -197,36 +220,37 @@ namespace Drugstore
                             sqlCommand.Parameters.Add(new SqlParameter("@Manufacturer", obj.ManufacturerID));
                             sqlCommand.Parameters.Add(new SqlParameter("@ExpTerm", obj.ExpTerm));
                             sqlCommand.Parameters.Add(new SqlParameter("@Purpose", obj.Purpose));
-                            sqlCommand.ExecuteNonQuery();
                             break;
                         case Tables.Manufacturers:
                             query = "Update Manufacturers Set(Title=@Title,Address=@Address,Phone=@Phone,CheckingAccount=@CheckingAccount) where ID=@ID";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             var obj1 = (ManufacturersEntity)entity;
                             sqlCommand.Parameters.Add(new SqlParameter("@ID", obj1.ID));
                             sqlCommand.Parameters.Add(new SqlParameter("@Title", obj1.Title));
                             sqlCommand.Parameters.Add(new SqlParameter("@Phone", obj1.Phone));
                             sqlCommand.Parameters.Add(new SqlParameter("@Address", obj1.Address));
                             sqlCommand.Parameters.Add(new SqlParameter("@CheckingAccount", obj1.CheckingAccount));
-                            sqlCommand.ExecuteNonQuery();
                             break;
-
                         case Tables.Measures:
                             query = "Update Measures Set(Title=@Title) where ID=@ID";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             var obj2 = (MeasuresEntity)entity;
                             sqlCommand.Parameters.Add(new SqlParameter("@ID", obj2.ID));
                             sqlCommand.Parameters.Add(new SqlParameter("@Title", obj2.Title));
-                            sqlCommand.ExecuteNonQuery();
                             break;
                         case Tables.Warehouse:
                             query = "Update Warehouse Set(DrugID=@DrugID,Quantity=@Quantity) where ID=@ID";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             var obj3 = (WarehouseItemsEntity)entity;
                             sqlCommand.Parameters.Add(new SqlParameter("@ID", obj3.ID));
                             sqlCommand.Parameters.Add(new SqlParameter("@DrugID", obj3.DrugID));
-                            sqlCommand.Parameters.Add(new SqlParameter("@Quantity", obj3.Quantity));
-                            sqlCommand.ExecuteNonQuery();
+                            sqlCommand.Parameters.Add(new SqlParameter("@Quantity", obj3.Quantity));                  
                             break;
                     }
+
                 }
+                sqlCommand.ExecuteNonQuery();
+                MessageBox.Show("Запись успешно обновлена");
             }
             catch (Exception ex)
             {
@@ -241,32 +265,33 @@ namespace Drugstore
                 using (sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    sqlCommand = new SqlCommand(query, sqlConnection);
+                  
                     switch (tables)
                     {
                         case Tables.Drugs:
                             query = "Delete from Drugs where Id=@ID";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             sqlCommand.Parameters.Add(new SqlParameter("@ID", ID));
-                            await sqlCommand.ExecuteNonQueryAsync();
                             break;
                         case Tables.Manufacturers:
                             query = "Delete from Manufacturers where Id=@ID";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             sqlCommand.Parameters.Add(new SqlParameter("@ID", ID));
-                            await sqlCommand.ExecuteNonQueryAsync();
                             break;
-
                         case Tables.Measures:
                             query = "Delete from Measures where Id=@ID";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             sqlCommand.Parameters.Add(new SqlParameter("@ID", ID));
-                            await sqlCommand.ExecuteNonQueryAsync();
                             break;
                         case Tables.Warehouse:
                             query = "Delete from Warehouse where Id=@ID";
-                            sqlCommand.Parameters.Add(new SqlParameter("@ID", ID));
-                            await sqlCommand.ExecuteNonQueryAsync();
+                            sqlCommand = new SqlCommand(query, sqlConnection);
+                            sqlCommand.Parameters.Add(new SqlParameter("@ID", ID));                        
                             break;
                     }
+                  
                 }
+                await sqlCommand.ExecuteNonQueryAsync();
                 MessageBox.Show("Запись успешно удалена");
             }
             catch (Exception ex)
@@ -283,13 +308,13 @@ namespace Drugstore
                 using (sqlConnection = new SqlConnection(connectionString))
                 {
                     sqlConnection.Open();
-                    sqlCommand = new SqlCommand(query, sqlConnection);
                     list = new List<IEntity>();
                     SqlDataReader reader;
                     switch (tables)
                     {
                         case Tables.Drugs:
                             query = "select * from Drugs";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             reader = sqlCommand.ExecuteReader();
                             if (reader.HasRows)
                             {
@@ -301,6 +326,7 @@ namespace Drugstore
                             break;
                         case Tables.Manufacturers:
                             query = "select * from Manufacturers";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             reader = sqlCommand.ExecuteReader();
                             if (reader.HasRows)
                             {
@@ -312,6 +338,7 @@ namespace Drugstore
                             break;
                         case Tables.Measures:
                             query = "select * from Measures";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             reader = sqlCommand.ExecuteReader();
                             if (reader.HasRows)
                             {
@@ -323,6 +350,7 @@ namespace Drugstore
                             break;
                         case Tables.Warehouse:
                             query = "select * from Warehouse";
+                            sqlCommand = new SqlCommand(query, sqlConnection);
                             reader = sqlCommand.ExecuteReader();
                             if (reader.HasRows)
                             {
@@ -475,21 +503,15 @@ namespace Drugstore
             Union = 2,
             GroupBy = 3
         }
-        public static void ExcelOutput(ExcelOperation operation)
+        public static void ExcelOutput(ExcelOperation operation,DataGridView dataGridView1)
         {
             try
             {
-                Excel.Application excel = new Excel.Application();
-
-                excel.Visible = true;
-                excel.SheetsInNewWorkbook = 1;
-                Excel.Workbook workbook = excel.Workbooks.Add();
-                excel.DisplayAlerts = false;
-
-                Excel.Worksheet sheet = (Excel.Worksheet)excel.Worksheets.get_Item(1);
-                sheet.Name = $"Отчет за {DateTime.Now.Date}";
-                excel.Worksheets.Add(sheet);
-
+                var xlApp = new Microsoft.Office.Interop.Excel.Application();
+                var xlWorkBook = xlApp.Workbooks.Open(Path.Combine(Environment.CurrentDirectory, "doc.xlsx"), 0, true, 5, "", "",
+                    true, Microsoft.Office.Interop.Excel.XlPlatform.xlWindows, "/t", false, false, 0, true, 1, 0);
+                var xlWorkSheet = (Microsoft.Office.Interop.Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+                dataset = new DataTable();
                 sqlConnection = new SqlConnection(connectionString);
                 sqlConnection.Open();
                 switch (operation)
@@ -498,49 +520,52 @@ namespace Drugstore
                         query = "select Count(*) from Drugs";
                         sqlCommand = new SqlCommand(query, sqlConnection);
                         object count = sqlCommand.ExecuteScalar();
-                        sheet.Cells[1, 1] = $"Количество записей : {count}";
+                        xlApp.Cells[1, 1] = $"Количество записей : {count}";
                         break;
                     case ExcelOperation.Union:
                         query = "select Drugs.Title,Price,Quantity as 'Кол-во в упаковке'," +
                             "Manufacturers.Title as 'Производитель'," +
                             "Measures.Title as 'Мера измерения'" +
-                            "from Drugs" +
-                            "inner join Manufacturers on Drugs.Manufacturer = Manufacturers.ID" +
-                            "inner join Measures on Drugs.MeasureID = Measures.ID";
-                        dataset = new DataTable();
+                            "from Drugs " +
+                            "inner join Manufacturers on Drugs.Manufacturer = Manufacturers.ID " +
+                            "inner join Measures on Drugs.MeasureID = Measures.ID";                      
                         adapter = new SqlDataAdapter(query, sqlConnection);
                         adapter.Fill(dataset);
-                        for (int i = 0; i < dataset.Rows.Count; i++)
+                        dataGridView1.DataSource = dataset;
+                        for (int i = 0; i < dataGridView1.Rows.Count; i++)
                         {
-                            for (int j = 0; j < dataset.Columns.Count; j++)
+                            for (int j = 0; j < dataGridView1.ColumnCount; j++)
                             {
-                                sheet.Cells[i + 1, j + 1] = String.Format("{0} {1}", i, j);
+                                xlApp.Cells[i + 3, j + 1] = dataGridView1.Rows[i].Cells[j].Value;
+                                (xlWorkSheet.Cells[i + 3, j + 1] as Microsoft.Office.Interop.Excel.Range).Font.Bold = false;
+                                (xlWorkSheet.Cells[i + 3, j + 1] as Microsoft.Office.Interop.Excel.Range).Font.Size = 13;
+                                (xlWorkSheet.Cells[i + 3, j + 1] as Microsoft.Office.Interop.Excel.Range).HorizontalAlignment = Microsoft.Office.Interop.Excel.Constants.xlCenter;
+                                (xlApp.Cells[dataGridView1.Rows.Count + 2, i + 1] as Microsoft.Office.Interop.Excel.Range).EntireColumn.AutoFit();
                             }
                         }
                         break;
                     case ExcelOperation.GroupBy:
-                        query = "select Drugs.Title, Warehouse.Quantity from Warehouse" +
-                            "left join Drugs on Warehouse.DrugID = Drugs.ID";
-                        dataset = new DataTable();
+                        query = "select Drugs.Title, Warehouse.Quantity from Warehouse " +
+                            "inner join Drugs on Warehouse.DrugID = Drugs.ID";
                         adapter = new SqlDataAdapter(query, sqlConnection);
                         adapter.Fill(dataset);
-                        for (int i = 0; i < dataset.Rows.Count; i++)
+                        dataGridView1.DataSource = dataset;
+                        for (int i = 0; i < dataGridView1.Rows.Count; i++)
                         {
-                            for (int j = 0; j < dataset.Columns.Count; j++)
+                            for (int j = 0; j < dataGridView1.ColumnCount; j++)
                             {
-                                sheet.Cells[i + 1, j + 1] = String.Format("{0} {1}", i, j);
+                                xlApp.Cells[i + 3, j + 1] = dataGridView1.Rows[i].Cells[j].Value;
+                                (xlWorkSheet.Cells[i + 3, j + 1] as Microsoft.Office.Interop.Excel.Range).Font.Bold = false;
+                                (xlWorkSheet.Cells[i + 3, j + 1] as Microsoft.Office.Interop.Excel.Range).Font.Size = 13;
+                                (xlWorkSheet.Cells[i + 3, j + 1] as Microsoft.Office.Interop.Excel.Range).HorizontalAlignment = Microsoft.Office.Interop.Excel.Constants.xlCenter;
+                                (xlApp.Cells[dataGridView1.Rows.Count + 2, i + 1] as Microsoft.Office.Interop.Excel.Range).EntireColumn.AutoFit();
                             }
                         }
                         break;
-
+                    
                 }
-                Excel.Range range = sheet.get_Range(sheet.Cells[1, 1], sheet.Cells[256, 256]);
-                range.Cells.Font.Name = "Tahoma";
-                range.Cells.Font.Size = 15;
-                range.Cells.Font.Color = ColorTranslator.ToOle(Color.Red);
-                excel.Application.ActiveWorkbook.SaveAs2(Path.Combine(Application.StartupPath, "doc.xlsx"));
-                excel.Workbooks.Open(Path.Combine(Application.StartupPath, "doc.xlsx"));
-
+                xlApp.Visible = true;
+                xlApp.UserControl = true;
                 sqlConnection.Close();
             }
             catch (Exception ex)
@@ -580,7 +605,7 @@ namespace Drugstore
         public string Purpose { get; set; }
         public override string ToString()
         {
-            return "ID " + this.ID + " " + this.Title;
+            return this.Title;
         }
     }
     public class ManufacturersEntity : IEntity
@@ -593,7 +618,7 @@ namespace Drugstore
 
         public override string ToString()
         {
-            return "ID " + this.ID + " " + this.Title;
+            return this.Title;
         }
     }
     public class MeasuresEntity : IEntity
@@ -602,7 +627,7 @@ namespace Drugstore
         public string Title { get; set; }
         public override string ToString()
         {
-            return "ID " + this.ID + " " + this.Title;
+            return this.Title;
         }
     }
     public class WarehouseItemsEntity : IEntity

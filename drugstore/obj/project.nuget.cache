@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "D2o2sBYB/n8ieh2HUFvCEh6zTwBOpHer62B/1oXT7ZIomvJ3Faf2xGJrvPlti5VJum2zsjPiGmLOSqOlMXcoPQ==",
+  "dgSpecHash": "5wkawdaD2yQr/2b60bl8mOosAW6oPQoi7/JnmBRgda2LohXcT0+7AF/6ZuCs6JPA1bZTBDf/B9RqC4a/Z+VpqQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\369\\source\\repos\\Drugstore\\Drugstore\\Drugstore.csproj",
+  "projectFilePath": "C:\\Users\\369\\Desktop\\Drugstore\\Drugstore\\Drugstore.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\369\\.nuget\\packages\\microsoft.extensions.configuration\\3.1.0\\microsoft.extensions.configuration.3.1.0.nupkg.sha512",
     "C:\\Users\\369\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\3.1.0\\microsoft.extensions.configuration.abstractions.3.1.0.nupkg.sha512",

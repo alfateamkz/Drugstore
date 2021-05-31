@@ -10,24 +10,25 @@ namespace Drugstore
 {
     public partial class DrugsExcel : Form
     {
-        public DrugsExcel()
+        public DrugsExcel(DataGridView data)
         {
             InitializeComponent();
+            dataGridView = data;
         }
-
+        DataGridView dataGridView;
         private void button1_Click(object sender, EventArgs e)
         {
-            ApplicationLogic.ExcelOutput(ApplicationLogic.ExcelOperation.DrugsRowsAmount);
+            ApplicationLogic.ExcelOutput(ApplicationLogic.ExcelOperation.DrugsRowsAmount,dataGridView);
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
-            ApplicationLogic.ExcelOutput(ApplicationLogic.ExcelOperation.Union);
+            ApplicationLogic.ExcelOutput(ApplicationLogic.ExcelOperation.Union, dataGridView);
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            ApplicationLogic.ExcelOutput(ApplicationLogic.ExcelOperation.GroupBy);
+            ApplicationLogic.ExcelOutput(ApplicationLogic.ExcelOperation.GroupBy, dataGridView);
         }
     }
 }
