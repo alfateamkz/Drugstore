@@ -84,7 +84,6 @@ C:\Users\369\Desktop\Drugstore\Drugstore\bin\Debug\netcoreapp3.1\runtimes\win\li
 C:\Users\369\Desktop\Drugstore\Drugstore\bin\Debug\netcoreapp3.1\Interop.Microsoft.Office.Interop.Excel.dll
 C:\Users\369\Desktop\Drugstore\Drugstore\bin\Debug\netcoreapp3.1\Interop.InteropExtensionLib.dll
 C:\Users\369\Desktop\Drugstore\Drugstore\bin\Debug\netcoreapp3.1\Interop.ExcelAdaptorLib.dll
-C:\Users\369\Desktop\Drugstore\Drugstore\obj\Debug\netcoreapp3.1\Drugstore.csprojAssemblyReference.cache
 C:\Users\369\Desktop\Drugstore\Drugstore\obj\Debug\netcoreapp3.1\Interop.Microsoft.Office.Interop.Excel.dll
 C:\Users\369\Desktop\Drugstore\Drugstore\obj\Debug\netcoreapp3.1\Interop.InteropExtensionLib.dll
 C:\Users\369\Desktop\Drugstore\Drugstore\obj\Debug\netcoreapp3.1\Interop.ExcelAdaptorLib.dll
@@ -124,3 +123,4 @@ C:\Users\369\Desktop\Drugstore\Drugstore\obj\Debug\netcoreapp3.1\Drugstore.cspro
 C:\Users\369\Desktop\Drugstore\Drugstore\obj\Debug\netcoreapp3.1\Drugstore.dll
 C:\Users\369\Desktop\Drugstore\Drugstore\obj\Debug\netcoreapp3.1\Drugstore.pdb
 C:\Users\369\Desktop\Drugstore\Drugstore\obj\Debug\netcoreapp3.1\Drugstore.genruntimeconfig.cache
+C:\Users\369\Desktop\Drugstore\Drugstore\obj\Debug\netcoreapp3.1\Drugstore.csproj.AssemblyReference.cache

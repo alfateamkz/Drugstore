@@ -76,7 +76,7 @@ namespace Drugstore
                         query = "select Warehouse.ID as 'ID записи',"+
                                 "Drugs.Title as 'Лек-во',"+
                                 "Warehouse.Quantity as 'Кол-во'"+
-                                "from Warehouse"+
+                                "from Warehouse "+
                                 "inner join Drugs on DrugID = Drugs.ID";
                         break;
                 }
